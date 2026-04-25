@@ -15,13 +15,18 @@ public:
     explicit RegForm(QWidget *parent = nullptr);
     ~RegForm();
 
+signals:
+    void signalOpenAuthForm();  // Сигнал для возврата к окну входа
+    void signalExit();
+
+private slots:
+    // Эти функции (слоты) должны быть здесь, чтобы кнопки из .ui работали
+    void on_btn_back_clicked();
+    void on_btn_register_clicked();
+    void on_checkBox_showPass_toggled(bool checked); // ВОТ ЭТОЙ СТРОЧКИ НЕ ХВАТАЛО
+
 private:
     Ui::RegForm *ui;
-
-signals:
-    void signalOpenAuthForm();  // Крик: "Откройте регистрацию!"
-private slots:
-    void on_btn_back_clicked();
 };
 
 #endif // REGFORM_H

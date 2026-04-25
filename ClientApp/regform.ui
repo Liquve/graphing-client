@@ -2,219 +2,61 @@
 <ui version="4.0">
  <class>RegForm</class>
  <widget class="QWidget" name="RegForm">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>1024</width>
-    <height>483</height>
-   </rect>
-  </property>
-  <property name="font">
-   <font>
-    <family>-apple-system</family>
-    <fontweight>Medium</fontweight>
-   </font>
-  </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Регистрация</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">/* 1. Идеально белый фон всего окна */
-QWidget {
-    background-color: white; 
-    font-family: -apple-system, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif;
-    color: black; 
-}
-
-/* 2. Заголовок &quot;Авторизация&quot; (ТЕПЕРЬ ПО ЦЕНТРУ) */
-QLabel#label_title {
-    font-size: 32px;
-    color: black;
-    margin-bottom: 15px;
-    qproperty-alignment: AlignCenter; /* Выравнивание по центру */
-}
-
-/* 3. Обычные надписи (Логин, Пароль) (ТЕПЕРЬ ПО ЦЕНТРУ) */
-QLabel {
-    font-size: 14px;
-    color: black;
-}
-
-/* 4. Поля ввода */
-QLineEdit {
-    background-color: #f8f9fa;
-    border: 1px solid #ced4da;
-    border-radius: 6px; 
-    padding: 10px;      
-    font-size: 14px;
-    color: black;
-}
-QLineEdit:focus {
-    border: 2px solid #8faadc; /* Рамка теперь тоже пастельного цвета */
-    background-color: white;
-}
-
-/* 5. ВСЕ КНОПКИ - Мягкий пастельный синий */
-QPushButton {
-    background-color: #8faadc; /* Тот самый пастельный цвет */
-    color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 12px;
-    font-size: 14px;
-    font-weight: bold;
-}
-/* Эффект при наведении (чуть темнее) */
-QPushButton:hover {
-    background-color: #7b9cd6; 
-}
-/* Эффект при нажатии */
-QPushButton:pressed {
-    background-color: #688acf; 
-}</string>
+   <string notr="true">
+    QWidget { background-color: #f5f6fa; font-family: 'Segoe UI', sans-serif; color: #2d3436; }
+    QFrame#regContainer { background-color: white; border-radius: 15px; border: 1px solid #dcdde1; }
+    
+    /* Убираем серые фоны у текста */
+    QLabel, QCheckBox { background-color: transparent; }
+    
+    QLineEdit { background-color: #ffffff; border: 2px solid #edeff2; border-radius: 8px; padding: 10px; font-size: 14px; min-width: 300px; }
+    QLineEdit:focus { border-color: #4a90e2; }
+    QLabel#label_title { font-size: 28px; font-weight: bold; color: #2f3640; background-color: transparent; }
+    QPushButton { background-color: #4a90e2; color: white; border: none; border-radius: 8px; padding: 12px; font-weight: bold; }
+    QPushButton:hover { background-color: #357abd; }
+    QPushButton#btn_back { background-color: transparent; color: #4a90e2; border: 1px solid #4a90e2; }
+    QPushButton#btn_exit { background-color: transparent; color: #e74c3c; border: 1px solid #e74c3c; margin-top: 10px; }
+    QPushButton#btn_exit:hover { background-color: #fab1a0; }
+   </string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="5" column="3">
-    <spacer name="horizontalSpacer_2">
-     <property name="orientation">
-      <enum>Qt::Orientation::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>380</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="2" column="1">
-    <widget class="QLabel" name="label_2">
-     <property name="font">
-      <font>
-       <family>-apple-system</family>
-       <pointsize>-1</pointsize>
-       <fontweight>Medium</fontweight>
-      </font>
-     </property>
-     <property name="text">
-      <string>Логин (Ваша почта)</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
-     </property>
+  <layout class="QGridLayout" name="mainGrid">
+   <item row="1" column="1">
+    <widget class="QFrame" name="regContainer">
+     <layout class="QVBoxLayout" name="vbox">
+      <property name="spacing"><number>10</number></property>
+      <property name="leftMargin"><number>30</number></property>
+      <property name="topMargin"><number>30</number></property>
+      <property name="rightMargin"><number>30</number></property>
+      <property name="bottomMargin"><number>30</number></property>
+      <item>
+       <widget class="QLabel" name="label_title">
+        <property name="text"><string>Регистрация</string></property>
+        <property name="alignment"><set>Qt::AlignCenter</set></property>
+       </widget>
+      </item>
+      <item><widget class="QLabel" name="l1"><property name="text"><string>Логин</string></property></widget></item>
+      <item><widget class="QLineEdit" name="lineEdit_login"/></item>
+      <item><widget class="QLabel" name="l2"><property name="text"><string>Email</string></property></widget></item>
+      <item><widget class="QLineEdit" name="lineEdit_email"/></item>
+      <item><widget class="QLabel" name="l3"><property name="text"><string>Пароль</string></property></widget></item>
+      <item><widget class="QLineEdit" name="lineEdit_password"><property name="echoMode"><enum>QLineEdit::Password</enum></property></widget></item>
+      <item><widget class="QLabel" name="l4"><property name="text"><string>Повтор пароля</string></property></widget></item>
+      <item><widget class="QLineEdit" name="lineEdit_password_repeat"><property name="echoMode"><enum>QLineEdit::Password</enum></property></widget></item>
+      <item><widget class="QCheckBox" name="checkBox_showPass"><property name="text"><string>Показать пароль</string></property></widget></item>
+      <item><widget class="QPushButton" name="btn_register"><property name="text"><string>ЗАРЕГИСТРИРОВАТЬСЯ</string></property></widget></item>
+      <item><widget class="QPushButton" name="btn_back"><property name="text"><string>Назад</string></property></widget></item>
+      <item><widget class="QPushButton" name="btn_exit"><property name="text"><string>Выйти из программы</string></property></widget></item>
+     </layout>
     </widget>
    </item>
-   <item row="3" column="1" colspan="2">
-    <widget class="QLineEdit" name="lineEdit_email"/>
-   </item>
-   <item row="4" column="1">
-    <widget class="QLabel" name="label_3">
-     <property name="font">
-      <font>
-       <family>-apple-system</family>
-       <pointsize>-1</pointsize>
-       <fontweight>Medium</fontweight>
-      </font>
-     </property>
-     <property name="text">
-      <string>Пароль</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="1" colspan="2">
-    <widget class="QLineEdit" name="lineEdit_password">
-     <property name="echoMode">
-      <enum>QLineEdit::EchoMode::Password</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="0" rowspan="2">
-    <spacer name="horizontalSpacer">
-     <property name="orientation">
-      <enum>Qt::Orientation::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>380</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="7" column="1" colspan="2">
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QPushButton" name="btn_register">
-       <property name="text">
-        <string>Зарегистрироваться</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item row="0" column="2">
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Orientation::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>45</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="1" column="1" colspan="2">
-    <widget class="QLabel" name="label_title">
-     <property name="font">
-      <font>
-       <family>-apple-system</family>
-       <pointsize>-1</pointsize>
-       <fontweight>DemiBold</fontweight>
-      </font>
-     </property>
-     <property name="text">
-      <string>Регистрация</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="1" colspan="2">
-    <widget class="QPushButton" name="btn_back">
-     <property name="text">
-      <string>Назад к входу</string>
-     </property>
-    </widget>
-   </item>
-   <item row="9" column="2">
-    <spacer name="verticalSpacer_2">
-     <property name="orientation">
-      <enum>Qt::Orientation::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>45</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="6" column="1">
-    <widget class="QCheckBox" name="checkBox_showPass">
-     <property name="text">
-      <string>Показать пароль</string>
-     </property>
-    </widget>
-   </item>
+   <item row="0" column="1"><spacer name="vs1"><property name="orientation"><enum>Qt::Vertical</enum></property></spacer></item>
+   <item row="2" column="1"><spacer name="vs2"><property name="orientation"><enum>Qt::Vertical</enum></property></spacer></item>
+   <item row="1" column="0"><spacer name="hs1"><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer></item>
+   <item row="1" column="2"><spacer name="hs2"><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer></item>
   </layout>
  </widget>
- <resources/>
- <connections/>
 </ui>

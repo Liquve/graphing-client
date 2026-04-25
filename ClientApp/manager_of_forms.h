@@ -2,9 +2,11 @@
 #define MANAGER_OF_FORMS_H
 
 #include <QWidget>
+#include <QStackedWidget>
 #include "authform.h"
 #include "regform.h"
 #include "forgotform.h"
+#include "taskform.h"
 
 class Manager_Of_Forms : public QWidget
 {
@@ -12,13 +14,14 @@ class Manager_Of_Forms : public QWidget
 
 public:
     explicit Manager_Of_Forms(QWidget *parent = nullptr);
-    ~Manager_Of_Forms(); // Добавили деструктор для порядка
+    ~Manager_Of_Forms();
 
 private:
-    // Вот наши три "куклы", которыми будет рулить менеджер
+    QStackedWidget *stack; // Наш "переключатель" страниц
     AuthForm *authForm;
     RegForm *regForm;
     ForgotForm *forgotForm;
+    Taskform *taskForm;
 };
 
-#endif // MANAGER_OF_FORMS_H
+#endif

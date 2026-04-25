@@ -1,19 +1,31 @@
 #include "client_api.h"
 #include <QDebug>
-#include <QStringList>
 
-// Конструктор
 Client_API::Client_API(QObject *parent) : QObject(parent)
 {
     socket = new QTcpSocket(this);
 
-    // Связываем событие "сервер прислал буквы" с нашей функцией onReadyRead
+    connect(socket, &QTcpSocket::connected, this, &Client_API::signalConnected);
+    connect(socket, &QTcpSocket::disconnected, this, &Client_API::signalDisconnected);
     connect(socket, &QTcpSocket::readyRead, this, &Client_API::onReadyRead);
 
-    // Просто для отладки: сообщаем, если подключились успешно
-    connect(socket, &QTcpSocket::connected, this, [this](){
-        qDebug() << "УСПЕХ: Соединение с сервером установлено!";
-        emit signalConnected();
+    // Добавляем обработку ошибок (например, если сервер выключен)
+    connect(socket, &QTcpSocket::errorOccurred, this, [this](QAbstractSocket::SocketError socketError) {
+        QString errorMsg;
+        switch (socketError) {
+        case QAbstractSocket::RemoteHostClosedError:
+            errorMsg = "Сервер разорвал соединение.";
+            break;
+        case QAbstractSocket::HostNotFoundError:
+            errorMsg = "Сервер не найден. Проверьте IP адрес.";
+            break;
+        case QAbstractSocket::ConnectionRefusedError:
+            errorMsg = "Сервер выключен или порт закрыт.";
+            break;
+        default:
+            errorMsg = "Ошибка сети: " + socket->errorString();
+        }
+        emit signalResponse(0, false, {}, errorMsg); // Посылаем сигнал ошибки
     });
 }
 
@@ -22,45 +34,35 @@ Client_API::~Client_API()
     socket->disconnectFromHost();
 }
 
-// Метод для подключения к серверу
 void Client_API::connectToServer(const QString &ip, int port)
 {
-    qDebug() << "Пытаемся подключиться к" << ip << port << "...";
     socket->connectToHost(ip, port);
 }
 
-// Метод для отправки сообщений (запросов)
-void Client_API::sendRequest(const QString &request)
+uint64_t Client_API::sendRequest(const std::string& type, const std::vector<std::string>& parameters)
 {
-    if (socket->state() == QTcpSocket::ConnectedState) {
-        // Отправляем строку и добавляем \n как признак конца сообщения
-        socket->write((request + "\n").toUtf8());
-        qDebug() << "КЛИЕНТ ОТПРАВИЛ:" << request;
-    } else {
-        qDebug() << "ОШИБКА: Нет подключения к серверу!";
+    if (socket->state() != QAbstractSocket::ConnectedState) {
+        emit signalResponse(0, false, {}, "Нет соединения с сервером!");
+        return 0;
     }
+
+    uint64_t id = nextRequestId++;
+    GraphingProtocol::Message msg = GraphingProtocol::Message::request(id, type, parameters);
+    std::string serialized = GraphingProtocol::serialize(msg) + "\n";
+    socket->write(serialized.c_str());
+    return id;
 }
 
-// Сюда приходят ответы от сервера
 void Client_API::onReadyRead()
 {
-    // Читаем всё, что пришло
-    QByteArray data = socket->readAll();
-    QString response = QString::fromUtf8(data).trimmed(); // Убираем лишние пробелы/энтеры
-
-    qDebug() << "СЕРВЕР ОТВЕТИЛ:" << response;
-
-    // --- РАЗБИРАЕМ ОТВЕТ ПО ПРОТОКОЛУ ПРЕПОДА ---
-    // Препод писал, что ответ: "auth+&login" или "auth-"
-
-    QStringList parts = response.split("&"); // Режем строку по амперсанду
-    QString command = parts[0];              // Берем первое слово (auth+, auth-, reg+ и тд)
-
-    if (command == "auth+") {
-        emit signalAuthSuccess(); // Кричим на всю программу: ПУСКАЙТЕ ЕГО!
+    while (socket->canReadLine()) {
+        QByteArray line = socket->readLine().trimmed();
+        if (line.isEmpty()) continue;
+        try {
+            GraphingProtocol::Message msg = GraphingProtocol::parse(line.toStdString());
+            if (msg.kind == GraphingProtocol::MessageKind::Response) {
+                emit signalResponse(msg.correlationId, msg.success, msg.parameters, QString::fromStdString(msg.errorMessage));
+            }
+        } catch (...) {}
     }
-    else if (command == "auth-") {
-        emit signalAuthFailed();  // Кричим: НЕ ПУСКАТЬ!
-    }
-    // Здесь потом допишем if для check+ и stat+
 }

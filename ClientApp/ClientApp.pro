@@ -1,6 +1,7 @@
 QT += widgets network
 
 CONFIG += c++17
+CONFIG += console
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -16,6 +17,8 @@ SOURCES += \
     taskform.cpp
 
 HEADERS += \
+    ../../graphing-server/GraphingProtocol.h \
+    GraphingProtocol.h \
     authform.h \
     client_api.h \
     forgotform.h \

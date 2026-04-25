@@ -1,58 +1,49 @@
 #include "authform.h"
 #include "ui_authform.h"
 #include "client_api.h"
-#include <QAction>
-#include <QIcon>
+#include <QMessageBox>
+#include <QRegularExpressionValidator>
 
-AuthForm::AuthForm(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::AuthForm)
-{
+AuthForm::AuthForm(QWidget *parent) : QWidget(parent), ui(new Ui::AuthForm) {
     ui->setupUi(this);
-
-    // Включаем встроенную кнопку-глазик (показать/скрыть) внутри поля
-    ui->lineEdit_password->setEchoMode(QLineEdit::Password); // Убеждаемся, что пароль скрыт
+    connect(ui->btn_exit, &QPushButton::clicked, this, [this](){ emit signalExit(); });
+    // Ограничение для логина: не даем вводить @ (раз мы договорились, что логин - это не почта)
+    QRegularExpression loginRegex("^[^@]*$");
+    ui->lineEdit_login->setValidator(new QRegularExpressionValidator(loginRegex, this));
 }
 
-AuthForm::~AuthForm()
-{
-    delete ui;
-}
+AuthForm::~AuthForm() { delete ui; }
 
-void AuthForm::on_btn_login_clicked()
-{
-    // 1. Берем текст из твоих красивых полей
-    QString login = ui->lineEdit_login->text();
+// Кнопка ВОЙТИ
+void AuthForm::on_btn_login_clicked() {
+    QString login = ui->lineEdit_login->text().trimmed();
     QString pass = ui->lineEdit_password->text();
 
-    // 2. Склеиваем строку по протоколу препода (auth&login&password)
-    QString request = "auth&" + login + "&" + pass;
-
-    // 3. Отдаем Синглтону приказ отправить это на сервер!
-    Client_API::getInstance().sendRequest(request);
-}
-
-
-void AuthForm::on_checkBox_showPass_toggled(bool checked)
-{
-    if (checked) {
-        // Если галочка стоит - показываем буквы
-        ui->lineEdit_password->setEchoMode(QLineEdit::Normal);
-    } else {
-        // Если галочки нет - прячем за точки
-        ui->lineEdit_password->setEchoMode(QLineEdit::Password);
+    if (login.isEmpty() || pass.isEmpty()) {
+        QMessageBox::warning(this, "Внимание", "Введите логин и пароль!");
+        return;
     }
+
+    // Отправляем запрос серверу.
+    // ВАЖНО: сервер ждет команду "login" и 2 параметра: login, password
+    Client_API::getInstance().sendRequest("login", {
+                                                       login.toStdString(),
+                                                       pass.toStdString()
+                                                   });
 }
 
-
-void AuthForm::on_btn_register_clicked()
-{
+// Кнопка РЕГИСТРАЦИЯ
+void AuthForm::on_btn_register_clicked() {
     emit signalOpenRegForm();
 }
 
-
-void AuthForm::on_btn_forget_password_clicked()
-{
-    emit signalOpenForgotForm();
+// Кнопка ЗАБЫЛ ПАРОЛЬ
+void AuthForm::on_btn_forget_password_clicked() {
+    QString currentLogin = ui->lineEdit_login->text().trimmed();
+    emit signalOpenForgotForm(currentLogin); // Отправляем логин менеджеру
 }
 
+// Показать/скрыть пароль
+void AuthForm::on_checkBox_showPass_toggled(bool checked) {
+    ui->lineEdit_password->setEchoMode(checked ? QLineEdit::Normal : QLineEdit::Password);
+}
