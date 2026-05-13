@@ -39,37 +39,31 @@ Taskform::Taskform(QWidget *parent) : QWidget(parent), ui(new Ui::Taskform) {
             double x = cLocale.toDouble(parts[0], &xOk);
             QString yStr = parts[1];
 
-            // --- НОВАЯ ЛОГИКА ДЛЯ ТАБЛИЦЫ ---
-            // Проверяем, подошли ли мы к очередному целому числу X
             if (xOk && nextTargetX <= 10 && x >= (double)nextTargetX - 0.0001) {
                 int row = ui->tableWidget->rowCount();
                 ui->tableWidget->insertRow(row);
 
-                // Записываем целое X
                 QTableWidgetItem *itemX = new QTableWidgetItem(QString::number(nextTargetX));
                 itemX->setTextAlignment(Qt::AlignCenter);
                 ui->tableWidget->setItem(row, 0, itemX);
 
-                // Записываем Y
                 QTableWidgetItem *itemY;
                 if (yStr == "null") {
-                    itemY = new QTableWidgetItem("—"); // Ставим прочерк на месте разрыва
+                    itemY = new QTableWidgetItem("—");
                 } else {
                     double y = cLocale.toDouble(yStr, &yOk);
-                    itemY = new QTableWidgetItem(QString::number(y, 'f', 1)); // Округляем до 1 знака
+                    itemY = new QTableWidgetItem(QString::number(y, 'f', 1));
                 }
 
                 itemY->setTextAlignment(Qt::AlignCenter);
                 ui->tableWidget->setItem(row, 1, itemY);
 
-                nextTargetX++; // Переходим к поиску следующего целого числа
+                nextTargetX++;
             }
 
-            // --- ЛОГИКА ДЛЯ ГРАФИКА ---
             if (yStr == "null") {
-                // Добавляем пустую точку, чтобы линия графика в этом месте разорвалась
                 if (xOk) graphPoints.append(QPointF(x, qQNaN()));
-                continue; // Идем дальше
+                continue;
             }
 
             double y = cLocale.toDouble(yStr, &yOk);
@@ -101,18 +95,34 @@ bool Taskform::eventFilter(QObject *watched, QEvent *event) {
     if (watched == ui->plotWidget && event->type() == QEvent::Paint) {
         QPainter painter(ui->plotWidget);
         painter.setRenderHint(QPainter::Antialiasing);
-        int w = ui->plotWidget->width(), h = ui->plotWidget->height();
+
+        int w = ui->plotWidget->width();
+        int h = ui->plotWidget->height();
+
         painter.fillRect(0, 0, w, h, Qt::white);
+
+        QPixmap pix(":/img/photo_2026-05-13_14-05-53.jpg");
+        if (!pix.isNull()) {
+            painter.setOpacity(0.8);
+
+            int imgW = 250;
+            int imgH = 150;
+
+            int posX = w - imgW - 20;
+            int posY = h - imgH - 20;
+
+            painter.drawPixmap(posX, posY, imgW, imgH, pix);
+
+            painter.setOpacity(1.0);
+        }
 
         if (graphPoints.isEmpty()) return true;
 
-        // Фиксированный масштаб для чистоты картинки
         double xMin = -10.0, xMax = 10.0;
         double yMin = -10.0, yMax = 10.0;
         int m = 45;
         int dW = w - 2*m, dH = h - 2*m;
 
-        // Сетка
         painter.setPen(QPen(QColor("#f0f0f0"), 1));
         for (int i = -10; i <= 10; i += 2) {
             int gx = m + (i - xMin)/(xMax - xMin) * dW;
@@ -121,31 +131,25 @@ bool Taskform::eventFilter(QObject *watched, QEvent *event) {
             painter.drawLine(m, gy, w-m, gy);
         }
 
-        // Оси
+
         painter.setPen(QPen(Qt::black, 2));
         int zY = m + dH - (0 - yMin)/(yMax - yMin) * dH;
         int zX = m + (0 - xMin)/(xMax - xMin) * dW;
         painter.drawLine(m-10, zY, w-m+10, zY);
         painter.drawLine(zX, m-10, zX, h-m+10);
 
-        // Функция проекции (БЕЗ ЖЕСТКОГО ОГРАНИЧЕНИЯ)
         auto map = [&](QPointF p) {
             double px = m + (p.x() - xMin) / (xMax - xMin) * dW;
             double py = m + dH - (p.y() - yMin) / (yMax - yMin) * dH;
             return QPointF(px, py);
         };
 
-        // РИСОВАНИЕ
         for (int i = 0; i < graphPoints.size() - 1; ++i) {
             QPointF p1 = graphPoints[i];
             QPointF p2 = graphPoints[i+1];
 
-            // 1. ПРОВЕРКА НА РАЗРЫВ (чтобы не было синей стены в x=1)
-            // Если одна из точек имеет Y больше 50, а вторая нормальная -
-            // значит это уход в асимптоту, линию рисовать НЕ НУЖНО.
             if (qAbs(p1.y()) > 50.0 || qAbs(p2.y()) > 50.0) continue;
 
-            // 2. ПРОВЕРКА НА ЗОНЫ (чтобы ветки не соединялись между собой)
             auto getZone = [](double x) {
                 if (x < 0) return 0;
                 if (x < 1.0) return 1;
@@ -153,16 +157,13 @@ bool Taskform::eventFilter(QObject *watched, QEvent *event) {
             };
             if (getZone(p1.x()) != getZone(p2.x())) continue;
 
-            // 3. Выбор цвета
             if (p1.x() < 0) painter.setPen(QPen(Qt::red, 3));
             else if (p1.x() < 1.0) painter.setPen(QPen(QColor("#2ecc71"), 3));
             else painter.setPen(QPen(Qt::blue, 3));
 
-            // Рисуем линию
             painter.drawLine(map(p1), map(p2));
         }
 
-        // Подписи
         painter.setPen(Qt::black);
         painter.drawText(m, h - 5, QString("Диапазон X: [-10;10] | Таблица: целые узлы"));
 

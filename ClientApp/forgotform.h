@@ -11,7 +11,7 @@ class ForgotForm : public QWidget
 public:
     explicit ForgotForm(QWidget *parent = nullptr);
     ~ForgotForm();
-    void setLogin(const QString &login); // Метод для подстановки логина
+    void setLogin(const QString &login);
 
 signals:
     void signalOpenAuthForm();

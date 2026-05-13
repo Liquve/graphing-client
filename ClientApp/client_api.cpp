@@ -9,7 +9,6 @@ Client_API::Client_API(QObject *parent) : QObject(parent)
     connect(socket, &QTcpSocket::disconnected, this, &Client_API::signalDisconnected);
     connect(socket, &QTcpSocket::readyRead, this, &Client_API::onReadyRead);
 
-    // Добавляем обработку ошибок (например, если сервер выключен)
     connect(socket, &QTcpSocket::errorOccurred, this, [this](QAbstractSocket::SocketError socketError) {
         QString errorMsg;
         switch (socketError) {
@@ -25,7 +24,7 @@ Client_API::Client_API(QObject *parent) : QObject(parent)
         default:
             errorMsg = "Ошибка сети: " + socket->errorString();
         }
-        emit signalResponse(0, false, {}, errorMsg); // Посылаем сигнал ошибки
+        emit signalResponse(0, false, {}, errorMsg);
     });
 }
 
@@ -37,6 +36,15 @@ Client_API::~Client_API()
 void Client_API::connectToServer(const QString &ip, int port)
 {
     socket->connectToHost(ip, port);
+}
+
+void Client_API::disconnectFromServer() {
+    if (socket->state() == QAbstractSocket::ConnectedState) {
+        socket->disconnectFromHost();
+        if (socket->state() != QAbstractSocket::UnconnectedState) {
+            socket->waitForDisconnected(1000);
+        }
+    }
 }
 
 uint64_t Client_API::sendRequest(const std::string& type, const std::vector<std::string>& parameters)

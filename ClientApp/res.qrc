@@ -1,5 +1,8 @@
 <RCC>
     <qresource prefix="/">
         <file>img/2026-04-09 20.01.09.jpg</file>
+        <file>img/photo_2026-05-13_14-05-53.jpg</file>
+        <file>img/eye_open.png</file>
+        <file>img/eye_closed.png</file>
     </qresource>
 </RCC>

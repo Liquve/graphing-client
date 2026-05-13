@@ -8,8 +8,10 @@ CONFIG += console
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    aboutform.cpp \
     authform.cpp \
     client_api.cpp \
+    coverform.cpp \
     forgotform.cpp \
     main.cpp \
     manager_of_forms.cpp \
@@ -19,15 +21,19 @@ SOURCES += \
 HEADERS += \
     ../../graphing-server/GraphingProtocol.h \
     GraphingProtocol.h \
+    aboutform.h \
     authform.h \
     client_api.h \
+    coverform.h \
     forgotform.h \
     manager_of_forms.h \
     regform.h \
     taskform.h
 
 FORMS += \
+    aboutform.ui \
     authform.ui \
+    coverform.ui \
     forgotform.ui \
     manager_of_forms.ui \
     regform.ui \

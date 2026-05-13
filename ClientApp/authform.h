@@ -13,15 +13,15 @@ public:
     ~AuthForm();
 
 signals:
-    void signalOpenRegForm();    // Переход к регистрации
+    void signalOpenRegForm();
     void signalOpenForgotForm(QString login);
+    void signalOpenAboutForm();
     void signalExit();
 
 private slots:
     void on_btn_login_clicked();
     void on_btn_register_clicked();
     void on_btn_forget_password_clicked();
-    void on_checkBox_showPass_toggled(bool checked);
 
 private:
     Ui::AuthForm *ui;

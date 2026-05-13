@@ -4,39 +4,53 @@
 #include <QMessageBox>
 #include <vector>
 #include <string>
-#include <QRegularExpression>          // Библиотека для правил (регулярок)
-#include <QRegularExpressionValidator> // Библиотека для ограничений ввода
+#include <QRegularExpression>
+#include <QRegularExpressionValidator>
+#include <QAction>
+#include <QIcon>
 
 RegForm::RegForm(QWidget *parent) : QWidget(parent), ui(new Ui::RegForm) {
     ui->setupUi(this);
     connect(ui->btn_exit, &QPushButton::clicked, this, [this](){ emit signalExit(); });
-    // 1. Правило для Email: разрешаем буквы, цифры, точки, тире и ОБЯЗАТЕЛЬНО одну собачку
+    connect(ui->btn_backToAbout, &QPushButton::clicked, this, &RegForm::signalOpenAboutForm);
     QRegularExpression emailRegex("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
-    QRegularExpressionValidator *emailValidator = new QRegularExpressionValidator(emailRegex, this);
-    ui->lineEdit_email->setValidator(emailValidator);
+    ui->lineEdit_email->setValidator(new QRegularExpressionValidator(emailRegex, this));
 
-    // 2. Правило для Логина: разрешаем всё, КРОМЕ символа @
-    // Регулярка [^@]* означает "любые символы в любом количестве, кроме @"
     QRegularExpression loginRegex("^[^@]*$");
-    QRegularExpressionValidator *loginValidator = new QRegularExpressionValidator(loginRegex, this);
-    ui->lineEdit_login->setValidator(loginValidator);
+    ui->lineEdit_login->setValidator(new QRegularExpressionValidator(loginRegex, this));
+
+    ui->lineEdit_login->setMaxLength(32);
+    ui->lineEdit_email->setMaxLength(64);
+    ui->lineEdit_password->setMaxLength(64);
+    ui->lineEdit_password_repeat->setMaxLength(64);
+
+    ui->lineEdit_login->setPlaceholderText("Логин");
+    ui->lineEdit_email->setPlaceholderText("example@mail.ru");
+
+    auto addEyeToField = [this](QLineEdit *field) {
+        QAction *eyeAction = field->addAction(QIcon(":/img/eye_closed.png"), QLineEdit::TrailingPosition);
+
+        connect(eyeAction, &QAction::triggered, this, [field, eyeAction]() {
+            if (field->echoMode() == QLineEdit::Password) {
+                field->setEchoMode(QLineEdit::Normal);
+                eyeAction->setIcon(QIcon(":/img/eye_open.png"));
+            } else {
+                field->setEchoMode(QLineEdit::Password);
+                eyeAction->setIcon(QIcon(":/img/eye_closed.png"));
+            }
+        });
+    };
+
+    addEyeToField(ui->lineEdit_password);
+    addEyeToField(ui->lineEdit_password_repeat);
 }
 
-RegForm::~RegForm()
-{
+RegForm::~RegForm() {
     delete ui;
 }
 
-void RegForm::on_btn_back_clicked()
-{
+void RegForm::on_btn_back_clicked() {
     emit signalOpenAuthForm();
-}
-
-void RegForm::on_checkBox_showPass_toggled(bool checked)
-{
-    QLineEdit::EchoMode mode = checked ? QLineEdit::Normal : QLineEdit::Password;
-    ui->lineEdit_password->setEchoMode(mode);
-    ui->lineEdit_password_repeat->setEchoMode(mode);
 }
 
 void RegForm::on_btn_register_clicked() {
@@ -45,33 +59,27 @@ void RegForm::on_btn_register_clicked() {
     QString pass = ui->lineEdit_password->text();
     QString passConfirm = ui->lineEdit_password_repeat->text();
 
-    // 1. Простая проверка на пустоту
     if (login.isEmpty() || email.isEmpty() || pass.isEmpty()) {
-        QMessageBox::warning(this, "Ошибка", "Заполните все поля!");
+        QMessageBox::warning(this, "Внимание", "Заполните все поля!");
         return;
     }
 
-    // 2. Проверка: является ли введенный email корректным (есть ли точка, домен и т.д.)
-    // (Повторно проверяем валидатором, так как он может быть в состоянии "частично введен")
-    int pos = 0; // Создаем переменную для позиции (обязательно для функции validate)
+    if (login.length() > 32 || email.length() > 64 || pass.length() > 64) {
+        QMessageBox::warning(this, "Внимание", "Введенные данные слишком длинные!");
+        return;
+    }
+
+    int pos = 0;
     if (ui->lineEdit_email->validator()->validate(email, pos) != QValidator::Acceptable) {
-        QMessageBox::warning(this, "Ошибка", "Введите корректный адрес почты (например, user@mail.ru)");
+        QMessageBox::warning(this, "Ошибка", "Введите корректный адрес почты!");
         return;
     }
 
-    // Дополнительная защита: проверяем, не ввел ли пользователь почту в поле логина
-    if (login.contains("@")) {
-        QMessageBox::warning(this, "Ошибка", "Логин не может содержать символ @. Используйте просто имя.");
-        return;
-    }
-
-    // 3. Проверка паролей
     if (pass != passConfirm) {
         QMessageBox::warning(this, "Ошибка", "Пароли не совпадают!");
         return;
     }
 
-    // Отправка на сервер
     Client_API::getInstance().sendRequest("register", {
                                                           login.toStdString(),
                                                           pass.toStdString(),

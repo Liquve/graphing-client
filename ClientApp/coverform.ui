@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CoverForm</class>
+ <widget class="QWidget" name="CoverForm">
+  <property name="styleSheet">
+   <string notr="true">
+    QWidget { background-color: #f5f6fa; font-family: 'Segoe UI', sans-serif; color: #2d3436; }
+    QFrame#paper { background-color: white; border-radius: 10px; border: 1px solid #dcdde1; }
+    QLabel { background: transparent; }
+    QLabel#header { font-size: 11pt; }
+    QLabel#title_type { font-size: 18pt; font-weight: bold; margin-top: 20px; }
+    QLabel#topic { font-size: 14pt; font-weight: bold; color: #4a90e2; }
+    QPushButton#btn_start { background-color: #4a90e2; color: white; border-radius: 8px; padding: 15px; font-weight: bold; font-size: 12pt; }
+    QPushButton#btn_start:hover { background-color: #357abd; }
+   </string>
+  </property>
+  <layout class="QGridLayout" name="mainGrid">
+   <item row="1" column="1">
+    <widget class="QFrame" name="paper">
+     <layout class="QVBoxLayout" name="vbox">
+      <property name="spacing"><number>10</number></property>
+      <property name="margin"><number>50</number></property>
+      
+      <item>
+       <widget class="QLabel" name="header">
+        <property name="text">
+         <string>&lt;center&gt;Министерство науки и высшего образования Российской Федерации&lt;br&gt;Федеральное государственное автономное образовательное учреждение&lt;br&gt;высшего образования&lt;br&gt;&lt;b&gt;«МОСКОВСКИЙ ПОЛИТЕХНИЧЕСКИЙ УНИВЕРСИТЕТ»&lt;br&gt;(МОСКОВСКИЙ ПОЛИТЕХ)&lt;/b&gt;&lt;/center&gt;</string>
+        </property>
+       </widget>
+      </item>
+
+      <item><spacer><property name="orientation"><enum>Qt::Vertical</enum></property></spacer></item>
+
+      <item>
+       <widget class="QLabel" name="title_type">
+        <property name="text"><string>&lt;center&gt;ОТЧЁТ&lt;br&gt;&lt;small&gt;по дисциплине «Технологии и методы программирования»&lt;/small&gt;&lt;/center&gt;</string></property>
+       </widget>
+      </item>
+
+      <item>
+       <widget class="QLabel" name="label_tema"><property name="text"><string>&lt;center&gt;ТЕМА:&lt;/center&gt;</string></property></widget>
+      </item>
+
+      <item>
+       <widget class="QLabel" name="topic">
+        <property name="text">
+         <string>&lt;center&gt;«Разработка приложения клиент-сервер. Сервер хранит и обрабатывает данные. Клиент получает результаты расчётов и отображает их в табличной и графической форме.»&lt;/center&gt;</string>
+        </property>
+        <property name="wordWrap"><bool>true</bool></property>
+       </widget>
+      </item>
+
+      <item><spacer><property name="orientation"><enum>Qt::Vertical</enum></property></spacer></item>
+
+      <item>
+       <layout class="QHBoxLayout" name="infoBox">
+        <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer></item>
+        <item>
+         <widget class="QLabel" name="performers">
+          <property name="text">
+           <string>Выполнили студенты группы 251-371:
+Дёмин В.Д.
+Пацев М.Н.
+Федькова М.А.
+Подольская С.А.
+
+Проверила:
+Киреева Галина Ивановна
+к.т.н доцент</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+
+      <item><spacer><property name="orientation"><enum>Qt::Vertical</enum></property></spacer></item>
+      
+      <item>
+       <widget class="QPushButton" name="btn_start">
+        <property name="text"><string>ЗАПУСТИТЬ ПРИЛОЖЕНИЕ</string></property>
+       </widget>
+      </item>
+
+      <item>
+       <widget class="QLabel" name="footer">
+        <property name="text"><string>&lt;center&gt;Москва, 2026&lt;/center&gt;</string></property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="0" column="1"><spacer><property name="orientation"><enum>Qt::Vertical</enum></property></spacer></item>
+   <item row="2" column="1"><spacer><property name="orientation"><enum>Qt::Vertical</enum></property></spacer></item>
+   <item row="1" column="0"><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer></item>
+   <item row="1" column="2"><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer></item>
+  </layout>
+ </widget>
+</ui>

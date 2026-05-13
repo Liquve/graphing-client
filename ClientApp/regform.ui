@@ -10,8 +10,7 @@
     QWidget { background-color: #f5f6fa; font-family: 'Segoe UI', sans-serif; color: #2d3436; }
     QFrame#regContainer { background-color: white; border-radius: 15px; border: 1px solid #dcdde1; }
     
-    /* Убираем серые фоны у текста */
-    QLabel, QCheckBox { background-color: transparent; }
+    QLabel { background-color: transparent; }
     
     QLineEdit { background-color: #ffffff; border: 2px solid #edeff2; border-radius: 8px; padding: 10px; font-size: 14px; min-width: 300px; }
     QLineEdit:focus { border-color: #4a90e2; }
@@ -21,42 +20,151 @@
     QPushButton#btn_back { background-color: transparent; color: #4a90e2; border: 1px solid #4a90e2; }
     QPushButton#btn_exit { background-color: transparent; color: #e74c3c; border: 1px solid #e74c3c; margin-top: 10px; }
     QPushButton#btn_exit:hover { background-color: #fab1a0; }
+    QPushButton#btn_backToAbout {
+    background-color: transparent;
+    color: #636e72;
+    border: 1px solid #b2bec3;
+    font-size: 10px;
+}
+QPushButton#btn_backToAbout:hover {
+    background-color: #dfe6e9;
+}
    </string>
   </property>
   <layout class="QGridLayout" name="mainGrid">
    <item row="1" column="1">
     <widget class="QFrame" name="regContainer">
      <layout class="QVBoxLayout" name="vbox">
-      <property name="spacing"><number>10</number></property>
-      <property name="leftMargin"><number>30</number></property>
-      <property name="topMargin"><number>30</number></property>
-      <property name="rightMargin"><number>30</number></property>
-      <property name="bottomMargin"><number>30</number></property>
+      <property name="spacing">
+       <number>10</number>
+      </property>
+      <property name="leftMargin">
+       <number>30</number>
+      </property>
+      <property name="topMargin">
+       <number>30</number>
+      </property>
+      <property name="rightMargin">
+       <number>30</number>
+      </property>
+      <property name="bottomMargin">
+       <number>30</number>
+      </property>
       <item>
        <widget class="QLabel" name="label_title">
-        <property name="text"><string>Регистрация</string></property>
-        <property name="alignment"><set>Qt::AlignCenter</set></property>
+        <property name="text">
+         <string>Регистрация</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
        </widget>
       </item>
-      <item><widget class="QLabel" name="l1"><property name="text"><string>Логин</string></property></widget></item>
-      <item><widget class="QLineEdit" name="lineEdit_login"/></item>
-      <item><widget class="QLabel" name="l2"><property name="text"><string>Email</string></property></widget></item>
-      <item><widget class="QLineEdit" name="lineEdit_email"/></item>
-      <item><widget class="QLabel" name="l3"><property name="text"><string>Пароль</string></property></widget></item>
-      <item><widget class="QLineEdit" name="lineEdit_password"><property name="echoMode"><enum>QLineEdit::Password</enum></property></widget></item>
-      <item><widget class="QLabel" name="l4"><property name="text"><string>Повтор пароля</string></property></widget></item>
-      <item><widget class="QLineEdit" name="lineEdit_password_repeat"><property name="echoMode"><enum>QLineEdit::Password</enum></property></widget></item>
-      <item><widget class="QCheckBox" name="checkBox_showPass"><property name="text"><string>Показать пароль</string></property></widget></item>
-      <item><widget class="QPushButton" name="btn_register"><property name="text"><string>ЗАРЕГИСТРИРОВАТЬСЯ</string></property></widget></item>
-      <item><widget class="QPushButton" name="btn_back"><property name="text"><string>Назад</string></property></widget></item>
-      <item><widget class="QPushButton" name="btn_exit"><property name="text"><string>Выйти из программы</string></property></widget></item>
+      <item>
+       <widget class="QLabel" name="l1">
+        <property name="text">
+         <string>Логин</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="lineEdit_login"/>
+      </item>
+      <item>
+       <widget class="QLabel" name="l2">
+        <property name="text">
+         <string>Email</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="lineEdit_email"/>
+      </item>
+      <item>
+       <widget class="QLabel" name="l3">
+        <property name="text">
+         <string>Пароль</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="lineEdit_password">
+        <property name="echoMode">
+         <enum>QLineEdit::Password</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="l4">
+        <property name="text">
+         <string>Повтор пароля</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="lineEdit_password_repeat">
+        <property name="echoMode">
+         <enum>QLineEdit::Password</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btn_register">
+        <property name="text">
+         <string>ЗАРЕГИСТРИРОВАТЬСЯ</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btn_back">
+        <property name="text">
+         <string>Назад</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+ <widget class="QPushButton" name="btn_backToAbout">
+  <property name="text"><string>НАЗАД К ОПИСАНИЮ ЗАДАЧИ</string></property>
+ </widget>
+</item>
+      <item>
+       <widget class="QPushButton" name="btn_exit">
+        <property name="text">
+         <string>Выйти из программы</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
-   <item row="0" column="1"><spacer name="vs1"><property name="orientation"><enum>Qt::Vertical</enum></property></spacer></item>
-   <item row="2" column="1"><spacer name="vs2"><property name="orientation"><enum>Qt::Vertical</enum></property></spacer></item>
-   <item row="1" column="0"><spacer name="hs1"><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer></item>
-   <item row="1" column="2"><spacer name="hs2"><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer></item>
+   <item row="0" column="1">
+    <spacer name="vs1">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+    </spacer>
+   </item>
+   <item row="2" column="1">
+    <spacer name="vs2">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+    </spacer>
+   </item>
+   <item row="1" column="0">
+    <spacer name="hs1">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </spacer>
+   </item>
+   <item row="1" column="2">
+    <spacer name="hs2">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </spacer>
+   </item>
   </layout>
  </widget>
 </ui>

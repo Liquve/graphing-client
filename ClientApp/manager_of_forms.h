@@ -7,6 +7,8 @@
 #include "regform.h"
 #include "forgotform.h"
 #include "taskform.h"
+#include "coverform.h"
+#include "aboutform.h"
 
 class Manager_Of_Forms : public QWidget
 {
@@ -17,11 +19,13 @@ public:
     ~Manager_Of_Forms();
 
 private:
-    QStackedWidget *stack; // Наш "переключатель" страниц
+    QStackedWidget *stack;
     AuthForm *authForm;
     RegForm *regForm;
     ForgotForm *forgotForm;
     Taskform *taskForm;
+    CoverForm *coverForm;
+    AboutForm *aboutForm;
 };
 
 #endif

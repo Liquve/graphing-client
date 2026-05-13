@@ -5,7 +5,7 @@
 #include <QTcpSocket>
 #include <vector>
 #include <string>
-#include "GraphingProtocol.h" // Этот файл должен быть в папке клиента
+#include "GraphingProtocol.h"
 
 class Client_API : public QObject
 {
@@ -28,18 +28,17 @@ public:
     Client_API& operator=(const Client_API&) = delete;
 
     void connectToServer(const QString &ip, int port);
+    void disconnectFromServer();
 
-    // Универсальная функция для отправки запросов
     uint64_t sendRequest(const std::string& type, const std::vector<std::string>& parameters = {});
 
 signals:
     void signalConnected();
     void signalDisconnected();
-    // Этот сигнал будет нести ответ от сервера: (ID запроса, успешно ли, параметры, текст ошибки)
     void signalResponse(uint64_t id, bool success, std::vector<std::string> params, QString errorMsg);
 
 private slots:
     void onReadyRead();
 };
 
-#endif // CLIENT_API_H
+#endif

@@ -2,20 +2,28 @@
 <ui version="4.0">
  <class>ForgotForm</class>
  <widget class="QWidget" name="ForgotForm">
+  <property name="windowTitle">
+   <string>Восстановление доступа</string>
+  </property>
   <property name="styleSheet">
    <string notr="true">
     QWidget { background-color: #f5f6fa; font-family: 'Segoe UI', sans-serif; color: #2d3436; }
+    
     QFrame#container { background-color: white; border-radius: 15px; border: 1px solid #dcdde1; }
     
-    /* Прозрачность для чистого вида */
     QLabel { background-color: transparent; font-weight: bold; color: #636e72; }
     
     QLineEdit { background-color: #ffffff; border: 2px solid #edeff2; border-radius: 8px; padding: 12px; font-size: 14px; min-width: 320px; }
     QLineEdit:focus { border-color: #4a90e2; }
+    
     QLabel#label_title { font-size: 26px; font-weight: bold; color: #2f3640; margin-bottom: 10px; background-color: transparent; }
+    
     QPushButton { background-color: #4a90e2; color: white; border: none; border-radius: 8px; padding: 12px; font-weight: bold; font-size: 14px; }
     QPushButton:hover { background-color: #357abd; }
+    
     QPushButton#btn_back { background-color: transparent; color: #4a90e2; border: 1px solid #4a90e2; }
+    QPushButton#btn_back:hover { background-color: #f0f7ff; }
+
     QPushButton#btn_exit { background-color: transparent; color: #e74c3c; border: 1px solid #e74c3c; margin-top: 10px; }
     QPushButton#btn_exit:hover { background-color: #fab1a0; }
    </string>
@@ -24,48 +32,163 @@
    <item row="1" column="1">
     <widget class="QFrame" name="container">
      <layout class="QVBoxLayout" name="vbox">
-      <property name="spacing"><number>15</number></property>
-      <property name="leftMargin"><number>35</number></property>
-      <property name="topMargin"><number>35</number></property>
-      <property name="rightMargin"><number>35</number></property>
-      <property name="bottomMargin"><number>35</number></property>
+      <property name="spacing">
+       <number>15</number>
+      </property>
+      <property name="leftMargin">
+       <number>35</number>
+      </property>
+      <property name="topMargin">
+       <number>35</number>
+      </property>
+      <property name="rightMargin">
+       <number>35</number>
+      </property>
+      <property name="bottomMargin">
+       <number>35</number>
+      </property>
       <item>
        <widget class="QLabel" name="label_title">
-        <property name="text"><string>Восстановление</string></property>
-        <property name="alignment"><set>Qt::AlignCenter</set></property>
+        <property name="text">
+         <string>Восстановление</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
        </widget>
       </item>
+      
+      <!-- ШАГ 1: Ввод логина -->
       <item>
        <widget class="QWidget" name="step1_widget" native="true">
         <layout class="QVBoxLayout" name="v1">
-         <property name="spacing"><number>10</number></property>
-         <item><widget class="QLabel" name="lb1"><property name="text"><string>Логин пользователя:</string></property></widget></item>
-         <item><widget class="QLineEdit" name="lineEdit_loginOrEmail"><property name="placeholderText"><string>Напр: ivan_ivanov</string></property></widget></item>
-         <item><widget class="QPushButton" name="btn_sendRequest"><property name="text"><string>ПОЛУЧИТЬ КОД</string></property></widget></item>
+         <property name="spacing">
+          <number>10</number>
+         </property>
+         <property name="margin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="lb1">
+           <property name="text">
+            <string>Логин пользователя:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="lineEdit_loginOrEmail">
+           <property name="placeholderText">
+            <string>Напр: ivan_ivanov</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btn_sendRequest">
+           <property name="text">
+            <string>ПОЛУЧИТЬ КОД</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </widget>
       </item>
+
       <item>
        <widget class="QWidget" name="step2_widget" native="true">
         <layout class="QVBoxLayout" name="v2">
-         <property name="spacing"><number>10</number></property>
-         <item><widget class="QLabel" name="lb2"><property name="text"><string>Код подтверждения:</string></property></widget></item>
-         <item><widget class="QLineEdit" name="lineEdit_code"><property name="placeholderText"><string>000000</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item>
-         <item><widget class="QLabel" name="lb3"><property name="text"><string>Новый пароль:</string></property></widget></item>
-         <item><widget class="QLineEdit" name="lineEdit_newPassword"><property name="echoMode"><enum>QLineEdit::Password</enum></property></widget></item>
-         <item><widget class="QPushButton" name="btn_resetPassword"><property name="text"><string>СМЕНИТЬ ПАРОЛЬ</string></property></widget></item>
+         <property name="spacing">
+          <number>10</number>
+         </property>
+         <property name="margin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="lb2">
+           <property name="text">
+            <string>Код подтверждения:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="lineEdit_code">
+           <property name="placeholderText">
+            <string>000000</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="lb3">
+           <property name="text">
+            <string>Новый пароль:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="lineEdit_newPassword">
+           <property name="echoMode">
+            <enum>QLineEdit::Password</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btn_resetPassword">
+           <property name="text">
+            <string>СМЕНИТЬ ПАРОЛЬ</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </widget>
       </item>
-      <item><widget class="QPushButton" name="btn_back"><property name="text"><string>Назад к входу</string></property></widget></item>
-      <item><widget class="QPushButton" name="btn_exit"><property name="text"><string>Выход из программы</string></property></widget></item>
+
+      <item>
+       <widget class="QPushButton" name="btn_back">
+        <property name="text">
+         <string>Назад к входу</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btn_exit">
+        <property name="text">
+         <string>Выход из программы</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
-   <item row="0" column="1"><spacer name="vs1"><property name="orientation"><enum>Qt::Vertical</enum></property></spacer></item>
-   <item row="2" column="1"><spacer name="vs2"><property name="orientation"><enum>Qt::Vertical</enum></property></spacer></item>
-   <item row="1" column="0"><spacer name="hs1"><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer></item>
-   <item row="1" column="2"><spacer name="hs2"><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer></item>
+   <item row="0" column="1">
+    <spacer name="vs1">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+    </spacer>
+   </item>
+   <item row="2" column="1">
+    <spacer name="vs2">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+    </spacer>
+   </item>
+   <item row="1" column="0">
+    <spacer name="hs1">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </spacer>
+   </item>
+   <item row="1" column="2">
+    <spacer name="hs2">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </spacer>
+   </item>
   </layout>
  </widget>
 </ui>

@@ -8,16 +8,33 @@
   <property name="styleSheet">
    <string notr="true">
     QWidget { background-color: #f5f6fa; font-family: 'Segoe UI', sans-serif; color: #2d3436; }
+
     QFrame#loginContainer { background-color: white; border-radius: 15px; border: 1px solid #dcdde1; }
-    QLabel, QCheckBox { background-color: transparent; }
-    QLineEdit { background-color: #ffffff; border: 2px solid #edeff2; border-radius: 8px; padding: 10px; font-size: 14px; min-width: 300px; }
+
+    QLabel { background-color: transparent; }
+
+    QLineEdit { background-color: #ffffff; border: 2px solid #edeff2; border-radius: 8px; padding: 12px; font-size: 14px; min-width: 300px; }
     QLineEdit:focus { border-color: #4a90e2; }
+
     QLabel#label_title { font-size: 32px; font-weight: bold; color: #2f3640; margin-bottom: 10px; background-color: transparent; }
+
     QPushButton { background-color: #4a90e2; color: white; border: none; border-radius: 8px; padding: 12px; font-weight: bold; font-size: 14px; }
     QPushButton:hover { background-color: #357abd; }
+
     QPushButton#btn_register, QPushButton#btn_forget_password { background-color: transparent; color: #4a90e2; border: 1px solid #4a90e2; }
+    QPushButton#btn_register:hover, QPushButton#btn_forget_password:hover { background-color: #f0f7ff; }
+
     QPushButton#btn_exit { background-color: transparent; color: #e74c3c; border: 1px solid #e74c3c; margin-top: 20px; }
     QPushButton#btn_exit:hover { background-color: #fab1a0; }
+    QPushButton#btn_backToAbout {
+    background-color: transparent;
+    color: #636e72;
+    border: 1px solid #b2bec3;
+    font-size: 10px;
+}
+QPushButton#btn_backToAbout:hover {
+    background-color: #dfe6e9;
+}
    </string>
   </property>
   <layout class="QGridLayout" name="mainGrid">
@@ -67,13 +84,6 @@
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="checkBox_showPass">
-        <property name="text">
-         <string>Показать пароль</string>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QPushButton" name="btn_login">
         <property name="text">
          <string>ВОЙТИ</string>
@@ -94,6 +104,11 @@
         </property>
        </widget>
       </item>
+      <item>
+ <widget class="QPushButton" name="btn_backToAbout">
+  <property name="text"><string>НАЗАД К ОПИСАНИЮ ЗАДАЧИ</string></property>
+ </widget>
+</item>
       <item>
        <widget class="QPushButton" name="btn_exit">
         <property name="text">

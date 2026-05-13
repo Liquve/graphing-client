@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>Taskform</class>
  <widget class="QWidget" name="Taskform">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>306</width>
+    <height>608</height>
+   </rect>
+  </property>
   <property name="styleSheet">
    <string notr="true">
     QWidget { background-color: white; font-family: 'Segoe UI', sans-serif; }
@@ -67,10 +75,10 @@
       <item>
        <widget class="QDoubleSpinBox" name="spinBox_a">
         <property name="minimum">
-         <double>-100.0</double>
+         <double>-100.000000000000000</double>
         </property>
         <property name="maximum">
-         <double>100.0</double>
+         <double>100.000000000000000</double>
         </property>
        </widget>
       </item>
@@ -84,10 +92,10 @@
       <item>
        <widget class="QDoubleSpinBox" name="spinBox_b">
         <property name="minimum">
-         <double>-100.0</double>
+         <double>-100.000000000000000</double>
         </property>
         <property name="maximum">
-         <double>100.0</double>
+         <double>100.000000000000000</double>
         </property>
        </widget>
       </item>
@@ -101,10 +109,10 @@
       <item>
        <widget class="QDoubleSpinBox" name="spinBox_c">
         <property name="minimum">
-         <double>-100.0</double>
+         <double>-100.000000000000000</double>
         </property>
         <property name="maximum">
-         <double>100.0</double>
+         <double>100.000000000000000</double>
         </property>
        </widget>
       </item>
@@ -137,4 +145,6 @@
    </item>
   </layout>
  </widget>
+ <resources/>
+ <connections/>
 </ui>

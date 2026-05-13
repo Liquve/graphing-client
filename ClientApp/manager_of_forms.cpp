@@ -1,5 +1,7 @@
 #include "manager_of_forms.h"
 #include "client_api.h"
+#include "coverform.h"
+#include "aboutform.h"
 #include <QVBoxLayout>
 #include <QMessageBox>
 #include <QApplication>
@@ -12,77 +14,85 @@ Manager_Of_Forms::Manager_Of_Forms(QWidget *parent) : QWidget(parent)
     stack = new QStackedWidget(this);
     mainLayout->addWidget(stack);
 
-    authForm = new AuthForm();
-    regForm = new RegForm();
+    coverForm  = new CoverForm();
+    aboutForm  = new AboutForm();
+    authForm   = new AuthForm();
+    regForm    = new RegForm();
     forgotForm = new ForgotForm();
-    taskForm = new Taskform();
+    taskForm   = new Taskform();
 
+    stack->addWidget(coverForm);
+    stack->addWidget(aboutForm);
     stack->addWidget(authForm);
     stack->addWidget(regForm);
     stack->addWidget(forgotForm);
     stack->addWidget(taskForm);
 
-    // ОБРАБОТКА ОТВЕТОВ ОТ СЕРВЕРА
     connect(&Client_API::getInstance(), &Client_API::signalResponse, this, [=](uint64_t id, bool success, std::vector<std::string> params, QString errorMsg) {
 
-        // 1. ОБРАБОТКА ОШИБОК
         if (!success) {
-            // Если мы НЕ в окне забытого пароля - показываем ошибку здесь (для входа и регистрации)
-            // Окно ForgotForm само покажет свою ошибку через свой внутренний коннект
             if (stack->currentWidget() != forgotForm) {
                 QMessageBox::warning(this, "Внимание", errorMsg);
             }
             return;
         }
 
-        // 2. ОБРАБОТКА УСПЕХА (ПЕРЕКЛЮЧЕНИЕ ЭКРАНОВ)
         QWidget* current = stack->currentWidget();
 
-        // Успешный вход -> График
-        if (current == authForm) {
+        if (current == authForm || current == regForm) {
             stack->setCurrentWidget(taskForm);
+            this->showMaximized();
         }
-        // Успешная регистрация -> Вход
-        else if (current == regForm) {
-            QMessageBox::information(this, "Успех", "Регистрация завершена! Теперь войдите.");
-            stack->setCurrentWidget(authForm);
-        }
-        // Успех в сбросе пароля -> Вход
         else if (current == forgotForm) {
-            // Если это не выдача токена (параметр короткий или отсутствует), значит пароль изменен
             if (params.empty() || params[0].length() < 20) {
                 stack->setCurrentWidget(authForm);
             }
         }
     });
 
-    // НАВИГАЦИЯ МЕЖДУ ОКНАМИ
-    // Переходы, которые уже были
+    connect(coverForm, &CoverForm::signalOpenAuth, [=](){
+        stack->setCurrentWidget(aboutForm);
+    });
+
+    connect(aboutForm, &AboutForm::signalBack, [=](){
+        stack->setCurrentWidget(coverForm); // Назад к титульнику
+    });
+    connect(aboutForm, &AboutForm::signalForward, [=](){
+        stack->setCurrentWidget(authForm);  // Вперед ко входу
+    });
+
     connect(authForm, &AuthForm::signalOpenRegForm, [=](){ stack->setCurrentWidget(regForm); });
     connect(authForm, &AuthForm::signalOpenForgotForm, [=](QString login){
         forgotForm->setLogin(login);
         stack->setCurrentWidget(forgotForm);
     });
+
+    connect(authForm, &AuthForm::signalOpenAboutForm, [=](){
+        stack->setCurrentWidget(aboutForm);
+    });
+
+    connect(regForm, &RegForm::signalOpenAboutForm, [=](){
+        stack->setCurrentWidget(aboutForm);
+    });
+
     connect(regForm, &RegForm::signalOpenAuthForm, [=](){ stack->setCurrentWidget(authForm); });
     connect(forgotForm, &ForgotForm::signalOpenAuthForm, [=](){ stack->setCurrentWidget(authForm); });
 
-    // НОВАЯ ЛОГИКА: ВЫХОД ИЗ АККАУНТА
-    connect(taskForm, &Taskform::signalLogout, this, [=](){
-        // Можно спросить подтверждение
+    connect(taskForm, &Taskform::signalLogout, this, [=]() {
         auto res = QMessageBox::question(this, "Выход", "Вы уверены, что хотите выйти из аккаунта?");
         if (res == QMessageBox::Yes) {
+            Client_API::getInstance().disconnectFromServer();
+            Client_API::getInstance().connectToServer("127.0.0.1", 13579);
+
+            this->showNormal();
             stack->setCurrentWidget(authForm);
-            // Очищаем поля пароля для безопасности
-            // authForm->clearFields(); // если создашь такой метод
         }
     });
 
-    // НОВАЯ ЛОГИКА: ЗАВЕРШЕНИЕ РАБОТЫ (EXIT)
-    // Подключаем сигнал выхода от всех форм к закрытию приложения
     auto exitApp = [=](){
         auto res = QMessageBox::question(this, "Выход", "Закрыть программу?");
         if (res == QMessageBox::Yes) {
-            qApp->quit();
+            QApplication::quit();
         }
     };
 
@@ -90,6 +100,12 @@ Manager_Of_Forms::Manager_Of_Forms(QWidget *parent) : QWidget(parent)
     connect(regForm, &RegForm::signalExit, this, exitApp);
     connect(forgotForm, &ForgotForm::signalExit, this, exitApp);
     connect(taskForm, &Taskform::signalExit, this, exitApp);
+
+    this->resize(1200, 800);
+    this->setMinimumSize(950, 650);
+    this->setWindowTitle("Система визуализации графиков");
+
+    stack->setCurrentWidget(coverForm);
 }
 
 Manager_Of_Forms::~Manager_Of_Forms() {}
